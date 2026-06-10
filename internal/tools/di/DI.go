@@ -2,6 +2,8 @@ package di
 
 import (
 	"main/internal/connectors"
+	"main/internal/controllers"
+	"main/internal/repositories"
 
 	"github.com/samber/do/v2"
 )
@@ -10,9 +12,11 @@ var Injecteur do.Injector
 
 func creerPackage() func(do.Injector) {
 
-	return func (i do.Injector)  {
-		
+	return func(i do.Injector) {
+
 		do.ProvideTransient(i, connectors.NouveauConnectorHTTP)
+		do.ProvideTransient(i, repositories.NouveauRepositoryTopDomaine)
+		do.ProvideTransient(i, controllers.NouveauControllerTopDomaine)
 	}
 }
 
@@ -30,5 +34,3 @@ func CreationDUDI(p ...func(do.Injector)) {
 
 	Injecteur = injecteur
 }
-
-
