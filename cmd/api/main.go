@@ -1,4 +1,4 @@
-package api
+package main
 
 import (
 	"main/internal/router"

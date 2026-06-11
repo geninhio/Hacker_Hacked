@@ -21,13 +21,14 @@ func (r *Router) Redirection() {
 	// TODO: Faire un recover de panic pour go pour ne pas arreter le serveur
 	r.Router.Use(middlewares.MiddlewareRecoverPanic)
 
-	r.Router.Use(cors.Config{
+	r.Router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{"Origin, Content-Type, Accept"},
-	})
+	}))
 
 	// TODO: Finir la redirection
 	api := r.Router.Group("api")
-	api.Group("domainesProches").Get("/:URL", handlers.HandlerGetDomainesProches)
+	api.Group("domainesProches").Get("/:URL", middlewares.MiddlewareRequeteDomaines, handlers.HandlerGetDomainesProches)
 
+	r.Router.Use(middlewares.MiddlewareErreur404)
 }

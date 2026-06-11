@@ -1,0 +1,22 @@
+# Ignore les fichiers d'exemple et d'environnement
+# config/.env.example
+# config/.env
+
+# Ignore les fichiers de Git/GitLab
+.gitignore
+# .gitlab-ci.yml
+*.md
+.git/
+
+# Ignore les fichiers de Docker
+compose.yml
+Dockerfile
+deploy/
+
+# Ignore le diagramme UML
+# *.pdf
+# *.puml
+# *.svg
+
+# Ignore les fichiers temporaires de Golang
+vendor/

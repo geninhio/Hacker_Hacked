@@ -1,8 +1,12 @@
 package repositories
 
 import (
+	"bufio"
 	"main/internal/connectors"
 	"main/internal/models/data"
+	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/WangYihang/tranco-go-package"
@@ -25,20 +29,56 @@ func NouveauRepositoryTopDomaine(i do.Injector) (*RepositoryTopDomaine, error) {
 	return &RepositoryTopDomaine{Connexion: connexion}, nil
 }
 
-func (r *RepositoryTopDomaine) RecupererInfosURLTopDomaine(url string) (data.InfoURLDomaines, error) {
+func (r *RepositoryTopDomaine) recupererInfosURLTopDomaine(url string) (data.InfoURLDomaines, error) {
 
 	var sortie data.InfoURLDomaines
-	err := r.Connexion.Get(url, sortie)
+	err := r.Connexion.Get(url, &sortie)
 
 	if err != nil {
-		log.Error("Erreur lors de la récupération des infos sur L'URL des top domaines")
+		log.Error("Erreur lors de la récupération des infos sur L'URL des top domaines: ", err)
 		return data.InfoURLDomaines{}, err
 	}
 
 	return sortie, nil
 }
 
-func (r *RepositoryTopDomaine) RecupererTopDomaine() (*tranco.TrancoList, error) {
+func (r *RepositoryTopDomaine) RecupererTopDomaine(nbreDomaines int) (data.Domaines, error) {
+
+	var domaines data.Domaines
+	//TODO: encapsuler l'URL dans une variable d'environnement
+	infosurl, err := r.recupererInfosURLTopDomaine("https://tranco-list.eu/api/lists/date/latest")
+
+	if err != nil {
+		return data.Domaines{}, err
+	}
+
+	url := infosurl.Lien
+
+	urlACurl := strings.ReplaceAll(url, "1000000", strconv.Itoa(nbreDomaines))
+
+	resp, errCurl := http.Get(urlACurl)
+
+	if errCurl != nil {
+		log.Error("Erreur lors de la récupération des domaines avec curl: ", errCurl)
+		return data.Domaines{}, errCurl
+	}
+
+	defer resp.Body.Close()
+
+	scanner := bufio.NewScanner(resp.Body)
+	for scanner.Scan() {
+		domaines.Domaines = append(domaines.Domaines, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Error("Erreur lors de la lecture de la réponse: ", err)
+		return data.Domaines{}, err
+	}
+
+	return domaines, nil
+}
+
+func (r *RepositoryTopDomaine) RecupererTopDomaineSansCurl() (*tranco.TrancoList, error) {
 
 	// recuperer la date du jour
 	dateDuJour := time.Now().Format("2006-01-02")
@@ -48,7 +88,7 @@ func (r *RepositoryTopDomaine) RecupererTopDomaine() (*tranco.TrancoList, error)
 
 	// si il y a une erreur lors de la recuperation des domaines retourne nil
 	if err != nil {
-		log.Error("Erreur lors de la récupération des domaines")
+		log.Error("Erreur lors de la récupération des domaines", err)
 		return nil, err
 	}
 

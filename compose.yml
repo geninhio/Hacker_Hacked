@@ -1,0 +1,21 @@
+services:
+  hacker_hacked-dev:
+    container_name: hacker_hacked-dev
+    profiles: [dev]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: golang-dev
+    ports:
+      - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /usr/src/app
+        - action : rebuild
+          path: go.mod
+        - action : rebuild
+          path: go.sum
+        - action : rebuild
+          path: config/.air.conf
