@@ -5,6 +5,7 @@ import (
 	"main/internal/models/data"
 	"main/internal/models/responses"
 	"main/internal/repositories"
+	"main/internal/tools/calculation"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/samber/do/v2"
@@ -27,23 +28,25 @@ func NouveauControllerTopDomaine(i do.Injector) (*ControllerTopDomaine, error) {
 	return &ControllerTopDomaine{Repository: repository}, nil
 }
 
-func (c *ControllerTopDomaine) GetTopDomaines(nbreDomaines int) (responses.ModelResponseURLs, *errorsinproject.ErreurHTTP) {
+func (c *ControllerTopDomaine) GetTopDomaines(nomDomaine string, nbreDomaines int, nbreTopDomaines int) (responses.ModelResponseURLs, *errorsinproject.ErreurHTTP) {
 
 	var reponse responses.ModelResponseURLs
 
-	domaines, err := c.Repository.RecupererTopDomaine(nbreDomaines)
+	domaine, err := c.Repository.RecupererTopDomaine(nbreDomaines)
 
-	return modeliseurDonnees(reponse, domaines, err)
+	domainesProches := calculation.RetournerLesDomainesProches(nomDomaine, domaine.Domaines, nbreTopDomaines)
+
+	return modeliseurDonnees(reponse, domainesProches, err)
 }
 
-func modeliseurDonnees(reponse responses.ModelResponseURLs, domaines data.Domaines, erreur error) (responses.ModelResponseURLs, *errorsinproject.ErreurHTTP) {
+func modeliseurDonnees(reponse responses.ModelResponseURLs, domaines []data.DomaineClassifie, erreur error) (responses.ModelResponseURLs, *errorsinproject.ErreurHTTP) {
 
 	if erreur != nil {
 		errHTTP := errorsinproject.ErrorHTTP(fiber.StatusInternalServerError, "Erreur lors de la récupération des domaines")
 		return reponse, errHTTP
 	}
 
-	reponse.URLS = domaines.Domaines
+	reponse.URLS = domaines
 
 	return reponse, nil
 }

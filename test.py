@@ -1,12 +1,12 @@
 import re
 import requests
-import pandas as pd
-import asyncio 
+# import pandas as pd
+# import asyncio 
 import time
 import threading
-from tqdm import tqdm
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+# from tqdm import tqdm
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
 
 def get_top_domaine () : 
 
@@ -77,7 +77,9 @@ def distance_Levenstein(mot1, mot2):
 
     n, m = len(mot1), len(mot2)
     avant = list(range(m + 1))
+    print(avant)
     courant = [0] * (m + 1)
+    print(courant)
 
     for i in range(1, n + 1):
         courant[0] = i
@@ -203,18 +205,20 @@ cible = extraire_nom_domaine(string)
 
 # ouvrir_page("https://portfolio-alexy.wstd.io")
 
-domaine = get_top_domaine()
-domaines_proches = retourner_les_domaines_proches(cible, domaine, 3)
+# domaine = get_top_domaine()
+# domaines_proches = retourner_les_domaines_proches(cible, domaine, 3)
 
-print(domaines_proches)
+# print(domaines_proches)
 
-for domaine_proche in domaines_proches:
-    url = f"https://www.{domaine_proche}/"
-    load, chemin_screenshot = ouvrir_page(url)
-    if load:
-        print(f"Screenshoot enregistré : {chemin_screenshot}")
-    else:
-        print(chemin_screenshot)
+print(distance_Levenstein("niche", "chien"))
+
+# for domaine_proche in domaines_proches:
+#     url = f"https://www.{domaine_proche}/"
+#     load, chemin_screenshot = ouvrir_page(url)
+#     if load:
+#         print(f"Screenshoot enregistré : {chemin_screenshot}")
+#     else:
+#         print(chemin_screenshot)
 
 #retourner_les_domaines_proches(cible, domaine, 4)
 # threads = Creer_les_cinq_processus(domaine, 4)

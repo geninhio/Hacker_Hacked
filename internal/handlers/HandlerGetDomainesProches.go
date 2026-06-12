@@ -17,8 +17,6 @@ func HandlerGetDomainesProches(c fiber.Ctx) error {
 
 	nomDomaine := c.Params("URL")
 
-	_ = nomDomaine
-
 	parametres, ok := c.Value("parametres").(requests.ModelRequeteURLs)
 
 	if !ok {
@@ -32,7 +30,7 @@ func HandlerGetDomainesProches(c fiber.Ctx) error {
 		return response.CreerReponseErreur(c, errorsinproject.ErrorHTTP(fiber.StatusInternalServerError, "Erreur lors de l'invocation du controller"))
 	}
 
-	contenu, errController := controller.GetTopDomaines(parametres.NbreDomaines)
+	contenu, errController := controller.GetTopDomaines(nomDomaine, parametres.NbreDomaines, parametres.NbreTopDomaines)
 
 	if errController != nil {
 		return response.CreerReponseErreur(c, errController)
