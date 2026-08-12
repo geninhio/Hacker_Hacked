@@ -50,7 +50,7 @@ def charger_manifeste():
     if not chemin.exists():
         raise FileNotFoundError(
             "Le manifeste est absent. "
-            "Lance d'abord : "
+            "Il faut d'abord lancer : "
             "python src/download.py"
         )
 
