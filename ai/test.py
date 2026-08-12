@@ -4,16 +4,18 @@ import requests
 # import asyncio 
 import time
 import threading
-# from tqdm import tqdm
+from tqdm import tqdm
 # from selenium import webdriver
 # from selenium.webdriver.common.by import By
 
 def get_top_domaine () : 
 
     try:
-        reponse = requests.get(f'https://tranco-list.eu/api/lists/id/YLLKG')
+        reponse = requests.get(f'https://tranco-list.eu/api/lists/id/YW9WG')
         if reponse.status_code == 200 :
             lien = reponse.json()['download']
+            lien = lien.replace("1000000", "1000")
+            print(lien)
             donnees = requests.get(lien).text.split(f'\r\n')
             # print(requests.get(lien).text)
             # donnees = pd.read_csv(donnees, sep=",")
@@ -77,9 +79,9 @@ def distance_Levenstein(mot1, mot2):
 
     n, m = len(mot1), len(mot2)
     avant = list(range(m + 1))
-    print(avant)
+    #print(avant)
     courant = [0] * (m + 1)
-    print(courant)
+    #print(courant)
 
     for i in range(1, n + 1):
         courant[0] = i
@@ -163,7 +165,7 @@ def ouvrir_page(url):
     
 # print(get_top_domaine())
 # print("-------------------------------------------------------------------------------")
-string = "https://www.facebookk.com/python/python_regex.asp"
+string = "https://www.google.com/python/python_regex.asp"
 #print(len(assainir_liste_domaine(extraire_nom_domaine(string))))
 
 #print(extraire_nom_domaine(string))
@@ -197,8 +199,11 @@ cible = extraire_nom_domaine(string)
 #     return threads
 
      
-# print(cible)
-# print(retourner_les_domaines_proches(cible, 3))
+print(cible)
+t = time.time()
+domaines = get_top_domaine()
+print(retourner_les_domaines_proches(cible, domaines, 10))
+print(time.time() - t)
 #print(distance_Levenstein(cible, "amazonaws.com"))
 #retourner_les_domaines_proches(cible, 4)
 # t = time.time()
@@ -210,7 +215,6 @@ cible = extraire_nom_domaine(string)
 
 # print(domaines_proches)
 
-print(distance_Levenstein("niche", "chien"))
 
 # for domaine_proche in domaines_proches:
 #     url = f"https://www.{domaine_proche}/"

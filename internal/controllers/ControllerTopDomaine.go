@@ -8,6 +8,7 @@ import (
 	"main/internal/tools/calculation"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/log"
 	"github.com/samber/do/v2"
 )
 
@@ -36,6 +37,12 @@ func (c *ControllerTopDomaine) GetTopDomaines(nomDomaine string, nbreDomaines in
 
 	domainesProches := calculation.RetournerLesDomainesProches(nomDomaine, domaine.Domaines, nbreTopDomaines)
 
+	domainesProches = calculation.AssainirListeDomaines(domainesProches, c.Repository.Connexion.CheckerRedirection) 
+	
+	for i := range domainesProches {
+		log.Info("Vérification faite de L'URL : http://www.", domainesProches[i].NomDomaine,
+		" Redirection détectée : ", domainesProches[i].Redirection)
+	}
 	return modeliseurDonnees(reponse, domainesProches, err)
 }
 
