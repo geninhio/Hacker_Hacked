@@ -20,3 +20,6 @@ deploy/
 
 # Ignore les fichiers temporaires de Golang
 vendor/
+
+# Ignore le dossier de données du projet de dataset de similarité d'UI
+ai/ui_similarity_dataset/data/

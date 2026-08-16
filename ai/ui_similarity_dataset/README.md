@@ -53,13 +53,13 @@ Il est fortement recommandé de commencer avec seulement
 20 pages :
 
 ```bash
-python src/download.py --max-sources 20
+python ai/src/download.py --max-sources 20
 ```
 
 Puis :
 
 ```bash
-python src/build_dataset.py \
+python ai/src/build_dataset.py \
     --variantes-par-niveau 2 \
     --hard-negatives 1
 ```
