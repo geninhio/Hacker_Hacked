@@ -27,6 +27,11 @@ go.work.sum
 # env file
 .env
 
+# Dataset for AI of UI similarity
+ai/ui_similarity_dataset/data/
+
 # Editor/IDE
 # .idea/
 # .vscode/
+
+
